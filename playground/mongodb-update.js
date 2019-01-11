@@ -11,7 +11,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, client) => {
     console.log('Connected to Mongodb Server');
     const db = client.db('TodoApp');
 
-    //findAndDelete
+    //findOneAndUpdate
     db.collection('Todos').findOneAndUpdate(
             { text: "Call Lorenzo"}, 
             { $set: {"completed" : true}},
