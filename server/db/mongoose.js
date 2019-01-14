@@ -18,7 +18,7 @@ const options = {
 
   mongoose.connect('mongodb://localhost:27017/TodoAppMongoose', options).then(
   (res) =>{
-    console.log('opened', res);
+    console.log('opened');
   },
   (err) => {
     console.log(err);
@@ -33,3 +33,4 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   // we're connected!
 });
+
