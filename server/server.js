@@ -16,7 +16,13 @@ const options = {
     family: 4 // Use IPv4, skip trying IPv6
   };
 
-mongoose.connect('mongodb://localhost:27017/TodoAppMongoose', options).then(res => console.log(res));
+  mongoose.connect('mongodb://localhost:27017/TodoAppMongoose', options).then(
+  (res) =>{
+    console.log('opened', res);
+  },
+  (err) => {
+    console.log(err);
+  });  
 
 /*
 We have a pending connection to the test database running on localhost. 
@@ -29,15 +35,53 @@ db.once('open', function() {
 });
 
 var ToDoSchema = new mongoose.Schema({
-    text: String,
-    completed: Boolean,
-    completedAt: Number
+    text: {
+      type: String,
+      required: true,
+      minLength: 1,
+      trim: true      //eliminate blanks before and trailings
+    },
+    completed: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    completedAt: {
+      type: Number,
+      required: false,
+      default: null
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    }
   });
 
-var Todo = mongoose.model('TodoMongoose', ToDoSchema);
+  var UserSchema = new mongoose.Schema({
+    Name: {
+      type: String,
+      required: true,
+      minLength: 1,
+      trim: true      //eliminate blanks before and trailings
+    },
+    email: {
+      type: String,
+      required: true,
+      minLength: 1,
+      trim: true
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    }
+  });
+
+  var Todo = mongoose.model('TodoMongoose', ToDoSchema);
+  var User = mongoose.model('UserMongoose', UserSchema);
 
 var newTodo = new Todo({
-    text: 'Cook dinner'
+    text: 'Prepara la cena',
+    completedAt: 123
 });
 console.log(newTodo.text); // 'Cook dinner'
 
@@ -46,4 +90,31 @@ newTodo.save().then((doc) => {
     console.log('Saved todo', doc);
 }, (e) => {
     console.log('Unable to save todo');
+});
+
+var newTodo = new Todo({
+  text: 'Aiuta Solange',
+  completed: false
+});
+
+newTodo.save().then((doc) => {
+  console.log('Saved todo', doc);
+}, (e) => {
+  console.log('Unable to save todo');
+});
+
+//mongoose.disconnect();
+
+// User
+//email required trimmed
+var newUser = new User({
+  Name: 'Solange',
+  email: 'sp@gmail.com'
+});
+console.log(newUser.Name); // 'Cook dinner'
+
+newUser.save().then((doc) => {
+  console.log('Saved user', doc);
+}, (e) => {
+  console.log('Unable to save user', e);
 });
