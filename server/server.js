@@ -107,12 +107,11 @@ app.patch('/todos/:id', (req, res) => {
   Todo.findByIdAndUpdate( id, 
       { $set: body},
       {new: true}).then((todo) => {
-        console.log('Eureka', todo);   
-
         if(!todo){
           return res.status(404).send();
         }
-        res.send(todo);
+        console.log('Eureka, send request back', todo);   
+        res.send(todo);   //this is important so the server reply to the caller with status(200)
       }).catch((e) => {
         console.log('PATCH status 400', e);
         res.status(400).send();
