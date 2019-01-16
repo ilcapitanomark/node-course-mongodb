@@ -9,6 +9,9 @@ var {User}     = require('./models/user');
 
 var app = express();
 
+//now set up a dynamic port so that it will be the correct when pushing to Heroku
+const port = process.env.PORT || 3000;
+
 app.use(bodyParser.json());
 
 app.post('/todos', (req, res) => {
@@ -62,8 +65,24 @@ app.get('/todos/:id', (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log('Started on port 3000');
+app.delete('/todos/:id', (req, res) => {
+  //res.send(req.params);
+  var id = req.params.id;
+  console.log('id to delete',id);
+  if(!ObjectID.isValid(id)){
+    console.log(`Searched ObjectID is not valid ${id}`);
+    res.status(400).send(`Searched ObjectID is not valid ${id}`);
+  } else{
+    Todo.findByIdAndRemove(id).then((todo) => {
+      res.send({todo});
+    }, (e) => {
+      res.status(400).send(e);
+    });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Started on port ${port}`);
 });
 
 module.exports = {app};
